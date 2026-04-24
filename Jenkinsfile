@@ -1,7 +1,11 @@
 pipeline {
     agent any
     
-    // 1. Add the environment block here
+    // 1. Add the tools block here
+    tools {
+        maven 'Maven'
+    }
+    
     environment {
         NEW_VERSION = '1.3.0'
     }
@@ -10,8 +14,10 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Project'
-                // 2. Output the value of the variable
                 echo "Building version ${NEW_VERSION}"
+                
+                // 2. Add the tool command for Windows
+                bat 'mvn --version' 
             }
         }
         stage('Test') {
