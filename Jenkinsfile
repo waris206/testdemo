@@ -1,7 +1,11 @@
 pipeline {
     agent any
     
-    // 1. Add the tools block here
+    // 1. Add the parameters block here
+    parameters {
+        booleanParam(name: 'executeTests', defaultValue: true, description: 'Run test stage?')
+    }
+    
     tools {
         maven 'Maven'
     }
@@ -15,16 +19,20 @@ pipeline {
             steps {
                 echo 'Building Project'
                 echo "Building version ${NEW_VERSION}"
-                
-                // 2. Add the tool command for Windows
-                bat 'mvn --version' 
+                bat 'mvn --version'
             }
         }
+        
         stage('Test') {
+            // 2. Add the 'when' condition here
+            when {
+                expression { params.executeTests }
+            }
             steps {
                 echo 'Testing..'
             }
         }
+        
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
